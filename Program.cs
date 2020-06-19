@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using DSharpPlus;
+using DSharpPlus.CommandsNext;
 
 namespace YetAnotherRpgBot
 {
@@ -20,11 +21,12 @@ namespace YetAnotherRpgBot
                 LogLevel = LogLevel.Debug
             });
 
-            discord.MessageCreated += async e =>
+            var commands = discord.UseCommandsNext(new CommandsNextConfiguration
             {
-                if (e.Message.Content.ToLower().StartsWith("/yarb"))
-                    await e.Message.RespondAsync("I can't actually do things yet, sorry");
-            };
+                StringPrefix = "/yarb"
+            });
+
+            commands.RegisterCommands<CardCommands>();
 
             await discord.ConnectAsync();
             await Task.Delay(-1);
