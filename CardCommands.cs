@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
@@ -12,11 +13,16 @@ namespace YetAnotherRpgBot
         [Command("draw")]
         public async Task Draw(CommandContext context, string inputSuit)
         {
-            var suitExists = Enum.TryParse(typeof(PlayingCardSuit), inputSuit, out var suit);
-            if (!suitExists){
+            var recasedInputSuit = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(inputSuit.ToLower());
+
+            var suitExists = Enum.TryParse(typeof(PlayingCardSuit), recasedInputSuit, out var suit);
+
+            if (!suitExists)
+            {
                 await context.RespondAsync($"I didn't recognise this as a valid card suit: {inputSuit}");
             }
-            else{
+            else
+            {
                 var card = m_CardDeck.DrawCard((PlayingCardSuit)suit);
                 if (card == null)
                 {
